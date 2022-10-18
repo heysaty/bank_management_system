@@ -32,6 +32,14 @@ def index():
         return 'success'
     return render_template('index.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
+
+
+
+
+
 
 if __name__ == '__main__':
     # debug=True --> any change we make can get updated on web without re-running the code
