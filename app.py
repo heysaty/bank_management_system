@@ -28,7 +28,7 @@ def index():
         first_name = userDetails['first_name']
         last_name = userDetails['last_name']
         email = userDetails['email']
-        phone_no = userDetails['phone_no']
+        phone_no = userDetails['contact_no']
         password=userDetails['password']
         password = bcrypt.generate_password_hash(password)
 
