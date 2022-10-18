@@ -45,6 +45,7 @@ def index():
         mysql.connection.commit()
         cur.close()
         return 'success'
+
     return render_template('index.html')
 
 
@@ -63,10 +64,14 @@ def login():
 
 
         rows = cur.fetchone()
+
         if rows:
             auth=bcrypt.check_password_hash( rows[-1],password)
             if auth:
                 return render_template('homepage.html')
+            else:
+                return "wrong credentials"
+
         else:
             return "wrong credentials"
     return render_template('login.html')
