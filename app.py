@@ -36,7 +36,9 @@ def index():
 def login():
     return render_template('login.html')
 
-
+@app.route('/homepage', methods=['GET', 'POST'])
+def homepage():
+    return render_template('homepage.html')
 
 
 
