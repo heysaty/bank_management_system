@@ -97,22 +97,14 @@ def deposits():
             if rows:
                 total_amount = int(amount) + int(rows[2])
                 print(total_amount)
-                cur.execute("UPDATE deposits SET amount = %s WHERE userid LIKE %s",[str(total_amount), id_users])
+                cur.execute("UPDATE deposits SET amount = %s WHERE userid LIKE %s", [str(total_amount), id_users])
             else:
-                cur.execute("INSERT INTO deposits(userid,amount) VALUES(%s,%s)",[id_users, amount])
+                cur.execute("INSERT INTO deposits(userid,amount) VALUES(%s,%s)", [id_users, amount])
 
             mysql.connection.commit()
             cur.close()
 
             return render_template('deposits_success.html')
-
-            # if cur.execute("SELECT * FROM deposits WHERE userid LIKE %s", [row[0]]):
-            #     cur.execute("SELECT * FROM users WHERE email LIKE %s", [email])
-            #
-            #     rows = cur.fetchone()
-            #
-            #     total_amount=amount +
-
 
         else:
             return 'wrong credentials'
@@ -122,6 +114,48 @@ def deposits():
 
 @app.route('/transaction', methods=['GET', 'POST'])
 def transaction():
+    if request.method == 'POST':
+        userDetails = request.form
+        sender = userDetails['email']
+        reciever = userDetails['reciever']
+        amount = userDetails['amount']
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM users WHERE email LIKE %s", [sender])
+
+        rows = cur.fetchone()
+
+        if rows:
+            user_id = rows[0]
+            cur.execute("SELECT * FROM deposits WHERE userid LIKE %s", [user_id])
+            rows = cur.fetchone()
+            if rows:
+                print(rows)
+                total_amount = int(rows[2]) - int(amount)
+                cur.execute("UPDATE deposits SET amount= %s WHERE userid LIKE %s", [total_amount, user_id])
+
+                cur.execute("SELECT * FROM users WHERE email LIKE %s", [reciever])
+                rows = cur.fetchone()
+
+                if rows:
+                    reciever_id = rows[0]
+
+                    cur.execute("SELECT * FROM deposits WHERE userid LIKE %s", [reciever_id])
+                    rows = cur.fetchone()
+
+
+
+
+                else:
+                    return "reciever not found"
+
+            else:
+                return "sender have no deposit"
+        else:
+            return "wrong sender"
+    mysql.connection.commit()
+    cur.close()
+
     return render_template('transaction.html')
 
 
