@@ -142,6 +142,11 @@ def transaction():
 
                     cur.execute("SELECT * FROM deposits WHERE userid LIKE %s", [reciever_id])
                     rows = cur.fetchone()
+                    print(rows)
+
+                    reciever_total_amt=int(rows[2]) + int(amount)
+                    cur.execute("UPDATE deposits SET amount= %s WHERE userid LIKE %s", [reciever_total_amt, reciever_id])
+
 
 
 
