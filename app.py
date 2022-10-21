@@ -147,9 +147,10 @@ def transaction():
                     reciever_total_amt=int(rows[2]) + int(amount)
                     cur.execute("UPDATE deposits SET amount= %s WHERE userid LIKE %s", [reciever_total_amt, reciever_id])
 
+                    mysql.connection.commit()
+                    cur.close()
 
-
-
+                    return render_template('transaction_success.html')
 
                 else:
                     return "reciever not found"
@@ -158,6 +159,8 @@ def transaction():
                 return "sender have no deposit"
         else:
             return "wrong sender"
+
+
     mysql.connection.commit()
     cur.close()
 
